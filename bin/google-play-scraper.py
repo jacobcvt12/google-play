@@ -157,6 +157,7 @@ if __name__ == '__main__':
 	
 	i = 0
 	all_reviews = []
+	dup_counts = 0
 	
 	while True:		
 		reviews = download_reviews(i)
@@ -164,20 +165,34 @@ if __name__ == '__main__':
 			stderr.write('No more accessible reviews\n')
 			break
 			
-		old_count = len(set([x['text'] for x in all_reviews]))
+		old_count = len(set([x['text'] + x['rating'] + x['text'] \
+							 for x in all_reviews]))
 		all_reviews += reviews
-		new_count = len(set([x['text'] for x in all_reviews]))
-		
+		new_count = len(set([x['text'] + x['rating'] + x['text'] \
+							 for x in all_reviews]))
 		if new_count == old_count:
 			# only duplicate reviews added. exit program
-			break
+			# weirdly, google lets you access more pages,
+			# even when there are more pages
+			# it's possible that you will get a few duplicate
+			# reviews in your output, but this check will
+			# catch the duplicates pretty quickly
+			dup_count += 1
+			stderr.write('Only duplicates found on page %d\n' % (i + 1))			
+			
+			if dup_count > 50:
+				stderr.write('Duplicates found 50x in a row. Ending.\n')
+				break
 				
-		# print downloaded reviews
-		for review in reviews:
-			print review['date'] + '|' + \
-				review['rating'] + '|' + \
-				review['text'].encode('ascii', 'ignore')
-		
+		else:
+			dup_count = 0
+				
+			# print downloaded reviews
+			for review in reviews:
+				print review['date'] + '|' + \
+					review['rating'] + '|' + \
+					review['text'].encode('ascii', 'ignore')
+			
 		# download next page after sleeping
 		# to try to avoid captcha
 		i += 1
