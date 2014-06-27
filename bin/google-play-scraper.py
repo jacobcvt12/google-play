@@ -156,13 +156,22 @@ if __name__ == '__main__':
 	session.head('https://play.google.com/store/apps/details?id=%s' % appId)
 	
 	i = 0
+	all_reviews = []
 	
-	while True:
+	while True:		
 		reviews = download_reviews(i)
 		if not len(reviews):
 			stderr.write('No more accessible reviews\n')
 			break
+			
+		old_count = len(set([x['text'] for x in all_reviews]))
+		all_reviews += reviews
+		new_count = len(set([x['text'] for x in all_reviews]))
 		
+		if new_count == old_count:
+			# only duplicate reviews added. exit program
+			break
+				
 		# print downloaded reviews
 		for review in reviews:
 			print review['date'] + '|' + \
