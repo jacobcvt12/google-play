@@ -23,12 +23,11 @@ def download_reviews(pageNo):
 	
 	# put together data dict to pass to POST
 	data_dict = {
-		'id'				:	id,
-		'pageNum'			:	pageNum,
+		'id'			:	id,
+		'pageNum'		:	pageNum,
 		'reviewSortOrder'	:	reviewSortOrder,
 		'reviewType'		:	reviewType,
-		#'token'				:	token,
-		'xhr'				:	xhr
+		'xhr'			:	xhr
 	}
 	
 	# header info to pass to post
@@ -55,20 +54,9 @@ def download_reviews(pageNo):
     
 	# check for CAPTCHA
 	if 'captcha' in clean_response.lower():
-		while 'captcha' in clean_response.lower():
-			soup = BeautifulSoup(clean_response)
-			stderr.write(soup.prettify())
-			stderr.write('CAPTCHA found at review page %d\n' % (pageNo + 1))
-			stderr.write('Try going to play.google.com and')
-			stderr.write('entering the CAPTCHA code\n\n')
-			stderr.write('When you are ready press enter to continue:\n')
-			ready = raw_input('')
+		stderr.write('CAPTCHA found at review page %d\n' % (pageNo + 1))
+		exit(1)
 
-			response = session.post(url=url, data=data_dict, headers=header_dict)
-			clean_response = decode_response(response.text)
-
-
-	
 	# return(clean_response)
 	reviews = parse_html(clean_response)
 	
