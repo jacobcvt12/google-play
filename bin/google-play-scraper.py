@@ -180,8 +180,8 @@ if __name__ == '__main__':
 			dup_count += 1
 			stderr.write('Only duplicates found on page %d\n' % (i + 1))			
 			
-			if dup_count > 50:
-				stderr.write('Duplicates found 50x in a row. Ending.\n')
+			if dup_count > 5:
+				stderr.write('Duplicates found 5x in a row. Ending.\n')
 				break
 				
 		else:
