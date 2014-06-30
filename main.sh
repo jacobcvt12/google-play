@@ -35,3 +35,6 @@ do
 
     sleep 30
 done
+
+# combine all reviews into one file with header
+echo 'app|date|rating|text' | cat - ./output/reviews/*.reviews > ./output/reviews/all.reviews
