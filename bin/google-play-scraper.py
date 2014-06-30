@@ -180,8 +180,8 @@ if __name__ == '__main__':
 			dup_count += 1
 			stderr.write('Only duplicates found on page %d\n' % (i + 1))			
 			
-			if dup_count > 5:
-				stderr.write('Duplicates found 5x in a row. Ending.\n')
+			if dup_count > 3:
+				stderr.write('Duplicates found 3x in a row. Ending.\n')
 				break
 				
 		else:
@@ -196,6 +196,6 @@ if __name__ == '__main__':
 		# download next page after sleeping
 		# to try to avoid captcha
 		i += 1
-		sleep(1)
+		sleep(5)
 		
 	exit(0)
