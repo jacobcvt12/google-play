@@ -103,7 +103,10 @@ def parse_html(response):
 		# check for this and skip if that's the case
 		
 		if hasattr(review, 'name'):
-			review_list.append(extract_info(review))
+			# some 'reviews' are developer response
+			# skip these by checking the class
+			if review['class'] == 'single-review':
+				review_list.append(extract_info(review))
 		else:
 			# nothing here
 			pass
