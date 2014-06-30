@@ -27,11 +27,11 @@ do
     echo "Downloading ${app}..."
     # Call python script on hotel to download app reviews to hotel.reviews
     python ./bin/google-play-scraper.py ${hotelIDs[$app]} \
-        >> output/reviews/${app}.reviews \
-        2> >(tee -a output/logs/${app}_download.log >&2)
+        2> >(tee -a output/logs/${app}_download.log >&2) \
+        | sed "s/^/$app|/g" > output/reviews/${app}.reviews 
 
     echo "Finish downloading ${app}..."
-    echo "Waiting for 10 seconds..."
+    echo "Waiting for 30 seconds..."
 
-    sleep 10
+    sleep 30
 done
