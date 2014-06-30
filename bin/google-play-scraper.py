@@ -111,7 +111,7 @@ def parse_html(response):
 			# nothing here
 			pass
 			
-	return(review_list)
+	return([x for x in review_list if x is not None])
 			
 
 def extract_info(review):
@@ -125,18 +125,24 @@ def extract_info(review):
 	if len(children) == 22:
 		indices = [x - 1 for x in indices]
 	
-	review_date = sub('\n\s{1,}', '', children[indices[0]].contents[0])
+	try:
+		review_date = sub('\n\s{1,}', '', children[indices[0]].contents[0])
 	
-	# convert date to standard format
-	review_date = datetime.strptime(review_date, 
-									'%B %d, %Y').strftime('%Y-%m-%d')
-	review_rate = findall('[0-9]{2,3}', children[indices[1]]['style'])[0]
-	review_stars = str(int(review_rate) / 20) # convert to stars
-	review_text = children[indices[2]].contents[2]
+		# convert date to standard format
+		review_date = datetime.strptime(review_date, 
+										'%B %d, %Y').strftime('%Y-%m-%d')
+		review_rate = findall('[0-9]{2,3}', children[indices[1]]['style'])[0]
+		review_stars = str(int(review_rate) / 20) # convert to stars
+		review_text = children[indices[2]].contents[2]
 	
-	# clean text
-	review_text = review_text.replace('"', "'").replace('|', '')
-	review_text = review_text.replace('\n', '')
+		# clean text
+		review_text = review_text.replace('"', "'").replace('|', '')
+		review_text = review_text.replace('\n', '')
+	
+	except IndexError:
+		# seems like these are all foreign language reviews
+		stderr.write('Found unparsable review\n\n\n')
+		return None
 
 	# create a dictionary of the review to return
 	review_dict = {
